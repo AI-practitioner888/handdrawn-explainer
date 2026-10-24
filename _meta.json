@@ -1,0 +1,11 @@
+{
+  "customized": true,
+  "baseVersion": "1.0.0",
+  "localOwner": "clean-workspace",
+  "forkedFrom": "skillhub @user_2b46b0cf/handdrawn v1.0.0 (no longer tracks upstream)",
+  "customizations": [
+    "All drawing tools right-leaning (right-hand writing pose): pencil +0.70 / eraser +0.15 / inkPen-marker +0.62 rad",
+    "Chinese glyph stroke order uses real calligraphy order from Make Me a Hanzi medians.json instead of skeleton spatial order"
+  ],
+  "note": "本地定制版，与原 skillhub 发布版无关联。本体真源在 D:\\Workspace\\clean-workspace\\skills\\handdrawn-explainer\\"
+}

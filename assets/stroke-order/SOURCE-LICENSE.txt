@@ -1,0 +1,17 @@
+Stroke-order data: assets/stroke-order/medians.json
+
+Source: Make Me a Hanzi
+  Repository: https://github.com/skishore/makemeahanzi
+  Extracted from upstream graphics.txt (the per-character "medians" arrays only).
+
+The original glyph outlines and stroke medians are derived from the Arphic
+"文鼎" (WenKai / 楷体) font, distributed under the Arphic Public License (APL).
+See the upstream repository's APL/ and COPYING files for the full license text:
+  https://github.com/skishore/makemeahanzi/blob/master/APL
+  https://github.com/skishore/makemeahanzi/blob/master/COPYING
+
+This file retains only the real calligraphy stroke-order medians (one polyline
+per stroke, in 1024x1024 em coordinates, y-down). The on-screen glyph bitmaps
+rendered by compile_assets.py come from the separately bundled LXGW WenKai font
+(also derived from the Arphic WenKai font, SIL OFL), so the appearance stays a
+consistent Kai style while the writing order is now authentic.

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>手绘讲解视频预览</title>
+  <style>
+    @font-face{font-family:WenKai;src:url('./assets/fonts/LXGWWenKai-Regular.ttf') format('truetype');font-display:block}
+    *{box-sizing:border-box}body{margin:0;background:#eceee4;color:#282b28;font-family:WenKai,'KaiTi',sans-serif}
+    main{max-width:1120px;margin:30px auto;padding:0 22px}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:23px;font-weight:400;margin:0}small{color:#6c786c}canvas{width:100%;height:auto;display:block;background:#fdfcf3;border-radius:6px;box-shadow:0 14px 50px #53624a12}
+    .controls{display:flex;align-items:center;gap:15px;margin-top:16px}button{border:1px solid #739982;background:#fffdf4;color:#386d4d;border-radius:7px;padding:7px 17px;font:inherit;cursor:pointer}
+    input{flex:1;accent-color:#43946b}output{font-size:16px;min-width:90px}.note{color:#6d766d;font-size:15px;margin-top:18px;line-height:1.6}
+    body.export{background:#fdfcf3}body.export main{margin:0;padding:0;max-width:none}body.export header,body.export .controls,body.export .note{display:none}body.export canvas{width:auto;height:auto;border-radius:0;box-shadow:none}
+  </style>
+</head>
+<body>
+<main>
+  <header><h1>手绘讲解预览</h1><small id="summary">单工具绘制</small></header>
+  <canvas id="board" width="1280" height="720"></canvas>
+  <div class="controls"><button id="play">播放</button><button id="restart">重播</button><input id="seek" aria-label="播放位置" type="range" min="0" max="20" step="0.01" value="0"><output id="time">0.0 / 20.0</output></div>
+  <p class="note">拖动进度条检查绘制与擦除。每次只使用一件工具。</p>
+</main>
+<audio id="narration" preload="auto"></audio>
+<audio id="sfx" preload="auto"></audio>
+<script src="./renderer.js"></script>
+</body>
+</html>
