@@ -9,6 +9,7 @@ description: "Create and revise narrated explainer videos drawn entirely on an i
 > 本技能改编自开源技能 skillhub `handdrawn` v1.0.0，作者就本人的两处改造主张版权。
 > 第三方开源组件的许可证见根目录 `NOTICE`；作者本人的改造与打包版权见 `LICENSE`。
 > 两处改造：① 所有书写工具**右倾握笔**（铅笔 +0.70 / 橡皮 +0.15 / 钢笔马克笔 +0.62 rad）；② 中文字形改用 **Make Me a Hanzi 真实笔顺**（`assets/stroke-order/medians.json`），不再是骨架近似顺序。详见 `LOCAL-CUSTOM.md`。
+> **使用条款：** 本技能框架知识产权归作者所有，**仅允许下载使用，禁止改造、再分发与商用**；第三方开源组件（字体/笔顺/ink_trace）按其各自许可证分发、不受此限。详见 `LICENSE` 与 `NOTICE`。
 
 Create a narrated MP4, a contact sheet, and an editable JSON/HTML project using the bundled renderer. Resolve all skill resources relative to this file. Work in the user's workspace, outside the installed skill folder. Agent reasoning supplies the story and geometry; scripts supply deterministic asset compilation, timing, and rendering.
 
