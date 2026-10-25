@@ -49,7 +49,15 @@ Read [drawing-techniques.md](references/drawing-techniques.md) only when choosin
 
 Run `python <skill>/scripts/doctor.py`. Core dependencies are in `requirements.txt`; FFmpeg/ffprobe and a compatible Chromium browser are needed for MP4. Use an existing browser through `--browser` or `HANDDRAWN_BROWSER`, or Playwright Chromium. Import existing narration or use the optional Edge TTS helper; image generation and speech APIs are not bundled or automatically billed.
 
-Author `project.json` and `narration.json` as described in the schema. Audition the speech and place its measured phrases before locking drawing times. For a draft:
+Author `project.json` and `narration.json` as described in the schema. Audition the speech and place its measured phrases before locking drawing times. **Before the first build, run the red-light gate** (ported idea from storyboard linting: mechanical pre-flight checks with fix hints; red = must fix, yellow = advisory, exit 1 blocks):
+
+```text
+python <skill>/scripts/script_lint.py <work>/narration.json <work>/project.json
+```
+
+It checks sentence length (a sentence over 8 s has no anchors and drifts out of sync), polyphone risk characters, abstract-definition openings, term debt per board, narration gaps, element–sentence binding via `drawGroup:"g"+segmentId`, draw-window sync tolerances (lead ≤320 ms, finish ≤220 ms after sentence end), `drawGroup` time-block continuity (interleaved groups compress the whole scene), frame boundaries, and per-scene tail whitespace. Fix reds and rerun until it passes.
+
+For a draft:
 
 ```text
 python <skill>/scripts/build.py --project <work>/project.json --output <work>/build --audio-plan <work>/narration.json --sheet

@@ -80,3 +80,19 @@
 **旧 wav 会被原样复用，音频根本没重录**。必须另写一份不含 `audioFile`、带
 `mode="edge"` + `trimSilence=true` 的纯 TTS plan 来重录（输出文件名 `序号-id.wav` 相同，会覆盖）。
 重录后重新测量时长并回写 `dur.json`，再重跑排期生成器。
+
+## 开工红灯门禁 script_lint.py（2026-10-25 移植自花叔 storyboard_lint 机制）
+
+动手 build 之前跑机械门禁，**红灯不放行、每条带修法**（退出码：红灯 1 / 黄或绿 0 / 读不了 2）：
+
+```
+python scripts/script_lint.py narration.json project.json   # 顺序无所谓，按内容自动识别
+python scripts/script_lint.py narration.json                # 只有配音时单查 Stage A
+```
+
+覆盖的检查 = 本机踩过的坑全集合：
+- **A1 句长**（>8s 红灯：v2 声画漂移根因）｜**A2 多音字风险字**（黄灯，配合 polyphone_check）｜**A3 开场抽象定义**（红灯，concept-explain-writer 反模式）｜**A4 术语负债**（一板 >2 个黄灯）｜**A5 停顿断档**
+- **B1 绑定完整性**（drawGroup = "g"+段id 约定）｜**B2 同步判据**（领先 >320ms / 拖拍 >220ms 红灯，可 `--lead-tol/--finish-tol` 调）｜**B3 长句多元素**｜**B4 drawGroup 跨组夹层**（整板压缩的根因，红灯）｜**B5 帧边界**｜**B6 收尾留白**（<300ms 黄、画出场景边界红）｜**B7 首元素 startMs=0**
+
+实测：v3 成片数据 0 红 16 黄通过（黄灯均为已人工核验项）；人工埋 4 类坑全部命中。
+**实现坑（改代码注意）**：场景 id 形如 `board3`，数字不在开头——提取板号必须用 `re.search` 而非 `re.match`（match 锚定开头返回 None，会静默跳过全部 B 类检查，且不报错）。
