@@ -1,0 +1,17 @@
+# License / 许可证（作者本人部分）
+
+**handdrawn-explainer** 由 **AI-practitioner888（clean-workspace）** 改编、打包并署名。
+
+## 1. 作者本人的改造、打包与新增内容
+Copyright (c) 2026 AI-practitioner888（clean-workspace）。保留所有权利。
+除本文件与 `NOTICE` 另有说明外，作者本人的代码与文档归作者所有。
+
+## 2. 第三方开源组件
+本技能包含的第三方组件（技能引擎来源、霞鹜文楷字体、Make Me a Hanzi 笔顺数据、
+`ink_trace.py` 等）按其各自的原始许可证分发，详见 `NOTICE` 文件。
+作者不因本声明取得这些第三方组件的版权，亦不对其许可合规性作额外担保。
+
+## 3. 关于改编来源（skillhub `handdrawn`）
+本技能改编自该开源技能；作者仅就本人的改造部分主张版权。
+若该上游技能另有特定许可条款，请以 skillhub 上其发布协议为准。
+使用前请阅读 `NOTICE` 与 `LICENSES/` 下的各组件许可证文本。

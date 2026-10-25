@@ -5,10 +5,10 @@ description: "Create and revise narrated explainer videos drawn entirely on an i
 
 # Handdrawn Explainer
 
-> **本机定制版（clean-workspace 自有资产，与 skillhub 原版已无关）**
-> - 本体唯一真源：`D:\Workspace\clean-workspace\skills\handdrawn-explainer\`（运行时经 junction 挂到 `~\.workbuddy\skills\handdrawn-explainer`）。
-> - **路径铁律**：所有正式出片工程与产物落 `D:\Workspace\clean-workspace\outputs\` 下；技能本体只可读、不要往 C 盘技能目录写产物；改技能逻辑只改 D 盘这份。
-> - 相对原版的两处定制：① 所有书写工具改为**右倾握笔**（铅笔 +0.70 / 橡皮 +0.15 / 钢笔马克笔 +0.62 rad）；② 中文字形改用 **Make Me a Hanzi 真实笔顺**（`assets/stroke-order/medians.json`），不再是骨架近似顺序。详见 `LOCAL-CUSTOM.md`。
+> **作者 / Author：** AI-practitioner888（clean-workspace）。
+> 本技能改编自开源技能 skillhub `handdrawn` v1.0.0，作者就本人的两处改造主张版权。
+> 第三方开源组件的许可证见根目录 `NOTICE`；作者本人的改造与打包版权见 `LICENSE`。
+> 两处改造：① 所有书写工具**右倾握笔**（铅笔 +0.70 / 橡皮 +0.15 / 钢笔马克笔 +0.62 rad）；② 中文字形改用 **Make Me a Hanzi 真实笔顺**（`assets/stroke-order/medians.json`），不再是骨架近似顺序。详见 `LOCAL-CUSTOM.md`。
 
 Create a narrated MP4, a contact sheet, and an editable JSON/HTML project using the bundled renderer. Resolve all skill resources relative to this file. Work in the user's workspace, outside the installed skill folder. Agent reasoning supplies the story and geometry; scripts supply deterministic asset compilation, timing, and rendering.
 

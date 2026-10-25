@@ -1,11 +1,13 @@
 {
-  "customized": true,
+  "name": "handdrawn-explainer",
+  "author": "AI-practitioner888 (clean-workspace)",
+  "copyright": "Copyright (c) 2026 AI-practitioner888 (modifications & packaging)",
+  "license": "See LICENSE (author's parts) and NOTICE (third-party components).",
   "baseVersion": "1.0.0",
-  "localOwner": "clean-workspace",
-  "forkedFrom": "skillhub @user_2b46b0cf/handdrawn v1.0.0 (no longer tracks upstream)",
+  "forkedFrom": "skillhub @user_2b46b0cf/handdrawn v1.0.0 (open-source; adapted, no longer tracks upstream)",
   "customizations": [
     "All drawing tools right-leaning (right-hand writing pose): pencil +0.70 / eraser +0.15 / inkPen-marker +0.62 rad",
     "Chinese glyph stroke order uses real calligraphy order from Make Me a Hanzi medians.json instead of skeleton spatial order"
   ],
-  "note": "本地定制版，与原 skillhub 发布版无关联。本体真源在 D:\\Workspace\\clean-workspace\\skills\\handdrawn-explainer\\"
+  "note": "Authored/repackaged by AI-practitioner888 (clean-workspace). Third-party open-source components retain their own licenses; see NOTICE.md."
 }
