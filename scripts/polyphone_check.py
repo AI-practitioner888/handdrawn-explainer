@@ -16,12 +16,28 @@ spokenText 写成同音字强制读音，text 保持正确汉字用于字幕与�
     python polyphone_check.py <待测词> <参照A:读音1> <参照B:读音2> [更多参照...]
 例：
     python polyphone_check.py 测量 测良 测亮
+
+全稿扫查（探针表机制，移植自「陪你夜读」团队 polyphone_probe / 审稿关卡3）：
+    python polyphone_check.py --scan narration.json
+    python polyphone_check.py --scan 文稿.txt
+    python polyphone_check.py --scan --text "这一行是对的"
+扫 polyphone_probes.json 里的全部多音字，逐处输出上下文、两音、典型搭配与探针字，
+供人工定「本处应读音」；定完音再用上面的单词模式做 DTW 客观核验。
 """
-import asyncio, os, subprocess, sys, tempfile
+import asyncio, json, os, subprocess, sys, tempfile
+from pathlib import Path
 import numpy as np
 
 VOICE = 'zh-CN-XiaoxiaoNeural'
 SR = 48000
+PROBES_PATH = Path(__file__).with_name('polyphone_probes.json')
+
+
+def load_probes():
+    try:
+        return json.loads(PROBES_PATH.read_text(encoding='utf-8'))['chars']
+    except Exception:
+        return {}
 
 
 async def synth(word, path):
@@ -91,8 +107,67 @@ def dtw(a, b):
     return D[n, m] / max(k, 1)
 
 
+def scan_texts(texts, probes):
+    """texts: [(标签, 句子)]。输出逐处上下文清单。"""
+    rows, n_chars = [], 0
+    for tag, text in texts:
+        for i, ch in enumerate(text):
+            if ch not in probes:
+                continue
+            n_chars += 1
+            info = probes[ch]
+            lo, hi = max(0, i - 12), min(len(text), i + 13)
+            ctx = text[lo:i] + '【' + ch + '】' + text[i + 1:hi]
+            readings = ' ｜ '.join(
+                '%s(%s%s)' % (r['note'], r['py'],
+                              ' 探针%s' % r['probe'] if r.get('probe') else '')
+                + (' 搭配:%s' % '/'.join(r['coll'][:3]) if r.get('coll') else '')
+                for r in info)
+            rows.append((tag, ch, ctx, readings))
+    return rows, n_chars
+
+
+def collect_texts(arg):
+    """从 narration.json / txt / --text 收集 [(标签, 句子)]。"""
+    if arg == '--text':
+        return [('--text', sys.argv[sys.argv.index('--text') + 1])]
+    p = Path(arg)
+    if not p.exists():
+        print('读不了文件：%s' % arg)
+        sys.exit(2)
+    raw = p.read_text(encoding='utf-8')
+    if raw.lstrip().startswith('{') and 'segments' in raw:
+        segs = json.loads(raw)['segments']
+        return [('%s' % s.get('id', i), s.get('text', '')) for i, s in enumerate(segs)]
+    return [('%s:%d' % (p.name, i), ln.strip()) for i, ln in enumerate(raw.splitlines()) if ln.strip()]
+
+
+async def run_scan(arg):
+    probes = load_probes()
+    if not probes:
+        print('探针表缺失：%s' % PROBES_PATH)
+        sys.exit(2)
+    texts = collect_texts(arg)
+    rows, n = scan_texts(texts, probes)
+    print('全稿多音字扫查：共 %d 处（探针表 %d 字种）' % (n, len(probes)))
+    for tag, ch, ctx, readings in rows:
+        print('\n[%s] %s' % (tag, ctx))
+        print('    %s' % readings)
+    print('\n=== 下一步（夜读关卡3 流程）===')
+    print('1) 逐处定「本处应读音」：搭配语命中哪个音就是哪个音；拿不准的标存疑。')
+    print('2) 读音歧义消除不了的：改稿（换等义词 / 改结构 / 拆行），别留给配音阶段。')
+    print('3) 定稿后对存疑处做客观核验：python polyphone_check.py 待测词 探针A探针句参照 探针B探针句参照')
+    print('   （把探针字放进同款句式里当参照词，DTW 判 TTS 实际读音）')
+
+
 async def main():
     args = sys.argv[1:]
+    if args and args[0] == '--scan':
+        if len(args) < 2:
+            print(__doc__)
+            sys.exit(2)
+        await run_scan(args[1])
+        return
     if len(args) < 3:
         print(__doc__)
         sys.exit(2)

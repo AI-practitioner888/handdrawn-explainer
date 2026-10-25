@@ -47,7 +47,7 @@
   ```
 - 旁白连续性：`continuous` 策略要求静音间隔 <500ms 才过闸门；测试/刻意停顿用 `intentional` 策略绕过。正式片建议调好节奏用 `continuous`。
 
-## 中文配音多音字处理（2026-10-25 实测）
+## 中文配音多音字处理（2026-10-25 实测；探针机制 2026-10-25 并入「陪你夜读」团队成果）
 
 **结论：Edge 免费 TTS 端点不接受 `<phoneme>`，无法强制注音。**
 实测四种 alphabet（`sapi` / `pinyin` / `ups` / `ipa`）全部返回 `NoAudioReceived`；
@@ -80,6 +80,29 @@
 **旧 wav 会被原样复用，音频根本没重录**。必须另写一份不含 `audioFile`、带
 `mode="edge"` + `trimSilence=true` 的纯 TTS plan 来重录（输出文件名 `序号-id.wav` 相同，会覆盖）。
 重录后重新测量时长并回写 `dur.json`，再重跑排期生成器。
+
+### 探针机制（2026-10-25 从「陪你夜读」团队并入，互补整合）
+
+夜读专家团在 `outputs\陪你夜读-日更流水线\` 沉淀了三层防多音字体系，本技能吸收其两层、
+保留自研一层：
+
+1. **稿子侧定音（并入）**——判据：每个多音字在所在句里读音必须唯一，不需要听者判断。
+   歧义消除不了就改稿（换等义词/改结构/拆行），不留给配音阶段。
+2. **全稿扫查清单（并入）**——`polyphone_check.py --scan narration.json`：
+   逐处输出【上下文】+ 两音 + 典型搭配 + 探针字，供人工定「本处应读音」。
+3. **录音后客观核验（自研保留）**——log-mel DTW 整词比对，比夜读版的
+   FFT 相关+比例估窗更稳（不依赖时间窗估算）。探针字放进同款句式当参照词即可。
+
+**单一真源** `scripts/polyphone_probes.json`（49 字种）：探针表+语境搭配表，
+script_lint.py 的 A2 风险字表与 polyphone_check.py 共用此表。
+来源=夜读团队 polyphone_probe.py 30 字探针表 + 审稿关卡3 盯防表，
+并入白板线实测字（传/调/缝/假/省/兴/屏/相/卡/系/教）成超集；
+**已修正原表 3 处探针字不同音的 bug**：当 dāng 刀(dāo)→裆、弹 tán 单(dān)→谈、重 zhòng 中(zhōng)→众。
+
+```
+python scripts/polyphone_check.py --scan narration.json     # 全稿逐处清单（人工定音）
+python scripts/polyphone_check.py 测量 测良 测亮             # 单词 DTW 客观核验
+```
 
 ## 开工红灯门禁 script_lint.py（2026-10-25 移植自花叔 storyboard_lint 机制）
 

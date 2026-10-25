@@ -45,8 +45,14 @@ from pathlib import Path
 
 RED, YELLOW, GREEN = "红", "黄", "绿"
 
-# A2 多音字风险字（Edge TTS 常见翻车字；不在表内 ≠ 一定安全）
-POLYPHONE = "行当得重传落曲率弹调干缝假供应发卡分省处兴屏教系奇数长还指相空率"
+# A2 多音字风险字：优先读探针表 polyphone_probes.json（与 polyphone_check.py 共用单一真源，
+# 来源=陪你夜读团队探针机制）；表缺失时退回内置串。
+_POLYPHONE_FALLBACK = "行当得重传落曲率弹调干缝假供应发卡分省处兴屏教系奇数长还指相空率"
+_PROBES = Path(__file__).with_name("polyphone_probes.json")
+try:
+    POLYPHONE = "".join(json.loads(_PROBES.read_text(encoding="utf-8"))["chars"])
+except Exception:
+    POLYPHONE = _POLYPHONE_FALLBACK
 # A3 开场抽象词
 ABSTRACT_OPEN = re.compile(r"是指|所谓|定义|叫做|是一种|的概念|这个概念")
 # A4 引号术语
@@ -92,7 +98,8 @@ def lint_narration(narr, max_pause, issues):
         hits = sorted({ch for ch in text if ch in POLYPHONE})
         if hits:
             issues.append((YELLOW, "A2多音字", f"段 {s['id']} 含风险字：{' '.join(hits)}",
-                           "换等义词规避（行→排、当→作为），或录完跑 polyphone_check.py 核验读音"))
+                           "跑 polyphone_check.py --scan narration.json 出逐处上下文表，"
+                           "按典型搭配定音；歧义消除不了就换等义词（行→排、当→作为），定稿后单词模式 DTW 核验"))
     first = segs[0].get("text", "")
     if ABSTRACT_OPEN.search(first):
         issues.append((RED, "A3开场", "第一句就是抽象定义（是指/所谓/…）",

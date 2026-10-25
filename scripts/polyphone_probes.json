@@ -1,0 +1,207 @@
+{
+  "_source": "多音字探针表。探针字+判定阈值机制来自「陪你夜读」视频专家团 polyphone_probe.py（2026-10 实测沉淀）；语境搭配来自同团队 审稿关卡.md 关卡3 盯防表。本表为两线合并的单一真源，script_lint.py 与 polyphone_check.py 共用。",
+  "_probe_rule": "探针字 = 读音尽量唯一、与本读音同音节（最好同调）的普通汉字。原表三处不同音节已修正：当 dāng 刀(dāo)→裆、弹 tán 单(dān)→谈、重 zhòng 中(zhōng)→众。",
+  "_usage": "polyphone_check.py --scan narration.json 全稿逐处清单（人工定音）；polyphone_check.py 词 参照A 参照B 单词 DTW 核验。",
+  "chars": {
+    "行": [
+      {"py": "xing2", "probe": "形", "coll": ["不行", "还行", "一行人"], "note": "xíng"},
+      {"py": "hang2", "probe": "航", "coll": ["一行", "同行", "银行", "行业"], "note": "háng"}
+    ],
+    "得": [
+      {"py": "de5", "probe": "的", "coll": ["跑得快", "认得", "说得"], "note": "de 轻声补语"},
+      {"py": "de2", "probe": "德", "coll": ["得罪", "得到"], "note": "dé"},
+      {"py": "dei3", "probe": null, "coll": ["得去", "都得来"], "note": "děi，建议改写为「不得不」"}
+    ],
+    "还": [
+      {"py": "hai2", "probe": "孩", "coll": ["还是", "还有", "还在"], "note": "hái"},
+      {"py": "huan2", "probe": "环", "coll": ["还书", "还给"], "note": "huán"}
+    ],
+    "好": [
+      {"py": "hao3", "probe": "浩", "coll": ["很好", "好看"], "note": "hǎo"},
+      {"py": "hao4", "probe": "号", "coll": ["好学", "爱好", "好客"], "note": "hào"}
+    ],
+    "重": [
+      {"py": "zhong4", "probe": "众", "coll": ["重点", "最重"], "note": "zhòng"},
+      {"py": "chong2", "probe": "虫", "coll": ["重复", "重新"], "note": "chóng"}
+    ],
+    "地": [
+      {"py": "di4", "probe": "第", "coll": ["地方", "心底"], "note": "dì"},
+      {"py": "de5", "probe": "得", "coll": ["慢慢地"], "note": "de 状语轻声"}
+    ],
+    "着": [
+      {"py": "zhe5", "probe": "这", "coll": ["看着", "跟着"], "note": "zhe 助词"},
+      {"py": "zhao2", "probe": null, "coll": ["着急", "着火"], "note": "zháo"},
+      {"py": "zhuo2", "probe": "桌", "coll": ["沉着", "着装"], "note": "zhuó"}
+    ],
+    "会": [
+      {"py": "hui4", "probe": "汇", "coll": ["开会", "机会"], "note": "huì"},
+      {"py": "kuai4", "probe": "快", "coll": ["会计"], "note": "kuài"}
+    ],
+    "发": [
+      {"py": "fa1", "probe": "法", "coll": ["发现", "发言"], "note": "fā"},
+      {"py": "fa4", "probe": "罚", "coll": ["头发"], "note": "fà"}
+    ],
+    "觉": [
+      {"py": "jue2", "probe": "决", "coll": ["感觉", "觉得"], "note": "jué"},
+      {"py": "jiao4", "probe": "教", "coll": ["睡觉"], "note": "jiào"}
+    ],
+    "干": [
+      {"py": "gan1", "probe": "甘", "coll": ["干净"], "note": "gān"},
+      {"py": "gan4", "probe": "赣", "coll": ["只干一件事", "干活"], "note": "gàn"}
+    ],
+    "数": [
+      {"py": "shu4", "probe": "树", "coll": ["数据", "点数"], "note": "shù"},
+      {"py": "shu3", "probe": "属", "coll": ["数一数"], "note": "shǔ"}
+    ],
+    "空": [
+      {"py": "kong1", "probe": "恐", "coll": ["空间", "空白"], "note": "kōng"},
+      {"py": "kong4", "probe": "控", "coll": ["空缺", "空闲"], "note": "kòng"}
+    ],
+    "差": [
+      {"py": "cha4", "probe": "岔", "coll": ["脾气差", "差不多"], "note": "chà"},
+      {"py": "cha1", "probe": "叉", "coll": ["参差"], "note": "chā"},
+      {"py": "chai1", "probe": null, "coll": ["出差"], "note": "chāi"}
+    ],
+    "长": [
+      {"py": "chang2", "probe": "常", "coll": ["长期"], "note": "cháng"},
+      {"py": "zhang3", "probe": "厂", "coll": ["长大"], "note": "zhǎng"}
+    ],
+    "少": [
+      {"py": "shao3", "probe": "烧", "coll": ["多少", "很少"], "note": "shǎo"},
+      {"py": "shao4", "probe": "绍", "coll": ["少年", "少将"], "note": "shào"}
+    ],
+    "当": [
+      {"py": "dang1", "probe": "裆", "coll": ["当时", "当年"], "note": "dāng"},
+      {"py": "dang4", "probe": "荡", "coll": ["上当", "当作"], "note": "dàng"}
+    ],
+    "弹": [
+      {"py": "dan4", "probe": "淡", "coll": ["弹药", "防弹"], "note": "dàn"},
+      {"py": "tan2", "probe": "谈", "coll": ["弹琴"], "note": "tán"}
+    ],
+    "血": [
+      {"py": "xue4", "probe": "雪", "coll": ["血液", "冷血"], "note": "xuè"},
+      {"py": "xie3", "probe": "写", "coll": ["血淋淋"], "note": "xiě"}
+    ],
+    "折": [
+      {"py": "zhe2", "probe": "这", "coll": ["打折"], "note": "zhé"},
+      {"py": "she2", "probe": "蛇", "coll": ["折本"], "note": "shé"},
+      {"py": "zhe1", "probe": "遮", "coll": ["折腾"], "note": "zhē"}
+    ],
+    "藏": [
+      {"py": "cang2", "probe": "仓", "coll": ["收藏", "躲藏"], "note": "cáng"},
+      {"py": "zang4", "probe": "脏", "coll": ["西藏", "宝藏"], "note": "zàng"}
+    ],
+    "尽": [
+      {"py": "jin3", "probe": "紧", "coll": ["尽快", "尽管"], "note": "jǐn"},
+      {"py": "jin4", "probe": "进", "coll": ["尽力", "用尽"], "note": "jìn"}
+    ],
+    "倒": [
+      {"py": "dao3", "probe": "岛", "coll": ["倒下", "摔倒"], "note": "dǎo"},
+      {"py": "dao4", "probe": "到", "coll": ["倒水", "倒退"], "note": "dào"}
+    ],
+    "便": [
+      {"py": "bian4", "probe": "变", "coll": ["随便", "方便"], "note": "biàn"},
+      {"py": "pian2", "probe": "篇", "coll": ["便宜"], "note": "pián"}
+    ],
+    "曲": [
+      {"py": "qu1", "probe": "区", "coll": ["弯曲", "曲折"], "note": "qū"},
+      {"py": "qu3", "probe": "取", "coll": ["歌曲", "曲子"], "note": "qǔ"}
+    ],
+    "参": [
+      {"py": "can1", "probe": "餐", "coll": ["参加"], "note": "cān"},
+      {"py": "shen1", "probe": "身", "coll": ["人参"], "note": "shēn"},
+      {"py": "cen1", "probe": null, "coll": ["参差"], "note": "cēn"}
+    ],
+    "背": [
+      {"py": "bei4", "probe": "贝", "coll": ["背后", "背景"], "note": "bèi"},
+      {"py": "bei1", "probe": "杯", "coll": ["背包", "背东西"], "note": "bēi"}
+    ],
+    "提": [
+      {"py": "ti2", "probe": "题", "coll": ["提高", "提问"], "note": "tí"},
+      {"py": "di1", "probe": "堤", "coll": ["提防"], "note": "dī"}
+    ],
+    "划": [
+      {"py": "hua4", "probe": "画", "coll": ["计划"], "note": "huà"},
+      {"py": "hua2", "probe": "滑", "coll": ["划船"], "note": "huá"}
+    ],
+    "率": [
+      {"py": "lv4", "probe": "绿", "coll": ["效率", "概率"], "note": "lǜ"},
+      {"py": "shuai4", "probe": "摔", "coll": ["率领"], "note": "shuài"}
+    ],
+    "分": [
+      {"py": "fen1", "probe": null, "coll": ["分清", "分钟"], "note": "fēn"},
+      {"py": "fen4", "probe": null, "coll": ["六分", "满分"], "note": "fèn"}
+    ],
+    "为": [
+      {"py": "wei2", "probe": null, "coll": ["以为", "作为"], "note": "wéi"},
+      {"py": "wei4", "probe": null, "coll": ["因为", "为什么"], "note": "wèi"}
+    ],
+    "只": [
+      {"py": "zhi1", "probe": null, "coll": ["一只"], "note": "zhī"},
+      {"py": "zhi3", "probe": null, "coll": ["只有", "只是"], "note": "zhǐ"}
+    ],
+    "处": [
+      {"py": "chu3", "probe": null, "coll": ["处理"], "note": "chǔ"},
+      {"py": "chu4", "probe": null, "coll": ["处处", "到处"], "note": "chù"}
+    ],
+    "落": [
+      {"py": "luo4", "probe": null, "coll": ["失落", "落到"], "note": "luò；là/lào 口语见「落下」「落枕」"}
+    ],
+    "应": [
+      {"py": "ying1", "probe": null, "coll": ["应该"], "note": "yīng"},
+      {"py": "ying4", "probe": null, "coll": ["适应", "回应"], "note": "yìng"}
+    ],
+    "挑": [
+      {"py": "tiao1", "probe": null, "coll": ["挑刺", "挑水"], "note": "tiāo"},
+      {"py": "tiao3", "probe": null, "coll": ["挑战", "挑衅"], "note": "tiǎo"}
+    ],
+    "过": [
+      {"py": "guo4", "probe": null, "coll": ["过了", "过得"], "note": "guò"},
+      {"py": "guo5", "probe": null, "coll": ["有没有过"], "note": "guo 轻声"}
+    ],
+    "传": [
+      {"py": "chuan2", "probe": "船", "coll": ["传播", "传送", "传不了"], "note": "chuán（白板线 v3 实测词）"},
+      {"py": "zhuan4", "probe": "赚", "coll": ["传记", "自传"], "note": "zhuàn"}
+    ],
+    "调": [
+      {"py": "tiao2", "probe": "条", "coll": ["调整", "调音"], "note": "tiáo"},
+      {"py": "diao4", "probe": "掉", "coll": ["调查", "声调"], "note": "diào"}
+    ],
+    "缝": [
+      {"py": "feng2", "probe": "逢", "coll": ["缝补"], "note": "féng"},
+      {"py": "feng4", "probe": "凤", "coll": ["裂缝", "严丝合缝"], "note": "fèng（白板线 v3 实测词）"}
+    ],
+    "假": [
+      {"py": "jia3", "probe": "甲", "coll": ["真假", "假设"], "note": "jiǎ"},
+      {"py": "jia4", "probe": "嫁", "coll": ["放假"], "note": "jià"}
+    ],
+    "省": [
+      {"py": "sheng3", "probe": null, "coll": ["节省", "省份"], "note": "shěng"},
+      {"py": "xing3", "probe": "醒", "coll": ["反省"], "note": "xǐng"}
+    ],
+    "兴": [
+      {"py": "xing1", "probe": "星", "coll": ["兴起", "兴奋"], "note": "xīng"},
+      {"py": "xing4", "probe": "姓", "coll": ["高兴", "兴趣"], "note": "xìng"}
+    ],
+    "屏": [
+      {"py": "ping2", "probe": "瓶", "coll": ["屏幕"], "note": "píng"},
+      {"py": "bing3", "probe": "饼", "coll": ["屏息"], "note": "bǐng"}
+    ],
+    "相": [
+      {"py": "xiang1", "probe": "香", "coll": ["相同", "相互"], "note": "xiāng"},
+      {"py": "xiang4", "probe": "象", "coll": ["真相", "相面"], "note": "xiàng"}
+    ],
+    "卡": [
+      {"py": "ka3", "probe": null, "coll": ["卡片", "卡住"], "note": "kǎ"},
+      {"py": "qia3", "probe": null, "coll": ["关卡"], "note": "qiǎ"}
+    ],
+    "系": [
+      {"py": "xi4", "probe": null, "coll": ["联系", "系统"], "note": "xì"},
+      {"py": "ji4", "probe": "记", "coll": ["系鞋带", "系上"], "note": "jì"}
+    ],
+    "教": [
+      {"py": "jiao4", "probe": "轿", "coll": ["教育", "教材"], "note": "jiào"},
+      {"py": "jiao1", "probe": "交", "coll": ["教书", "教给"], "note": "jiāo"}
+    ]
+  }
+}
