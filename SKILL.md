@@ -55,7 +55,7 @@ Author `project.json` and `narration.json` as described in the schema. Audition 
 python <skill>/scripts/script_lint.py <work>/narration.json <work>/project.json
 ```
 
-It checks sentence length (a sentence over 8 s has no anchors and drifts out of sync), polyphone risk characters, abstract-definition openings, term debt per board, narration gaps, element–sentence binding via `drawGroup:"g"+segmentId`, draw-window sync tolerances (lead ≤320 ms, finish ≤220 ms after sentence end), `drawGroup` time-block continuity (interleaved groups compress the whole scene), frame boundaries, and per-scene tail whitespace. Fix reds and rerun until it passes.
+It checks sentence length (a sentence over 8 s has no anchors and drifts out of sync), polyphone risk characters, abstract-definition openings, term debt per board, narration gaps, element–sentence binding via `drawGroup:"g"+segmentId`, draw-window sync tolerances (lead ≤320 ms, finish ≤220 ms after sentence end), `drawGroup` time-block continuity (interleaved groups compress the whole scene), frame boundaries, per-scene tail whitespace, and **layout collisions** (two text blocks whose boxes overlap = red; a stroke cutting through a text corner = red, while text fully enclosed in a shape is intentional and passes; text sitting closer than 8 px to a stroke = yellow). Fix reds and rerun until it passes.
 
 For a draft:
 

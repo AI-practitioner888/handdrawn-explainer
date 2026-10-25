@@ -33,6 +33,13 @@ Stage B（需要 project.json，绝对轴 = scene.startMs + 元素相对 startMs
      场景末尾不足 --tail-min → 黄（完整态没停留，观众看不清成品）
   B7 首元素：场景内第一个元素 startMs = 0 → 黄（约定给 40ms，避开 all-drawn 首帧判定）
 
+Stage C（需要 project.json，纯几何版面检查，与时间轴无关）：
+  C1 文字互压：任意两段文字的预估包围盒相交 → 红（v3 第三板「纠缠」标题压住
+     「这一对：和 = 7」标注的形态：y 只差 34px，而标题字号 46）
+  C2 文字被图形穿过：描边包围盒与文字盒相交、且没有把文字整个包住 → 红
+     （文字在方框/括号里是设计意图，只穿一角才是事故）
+  C3 文字贴线：文字与描边水平重叠、垂直间隙 < 8px → 黄（视觉上贴在一起）
+
 退出码：有红灯 1；只有黄灯或全绿 0；读不了文件 2。只用标准库。
 """
 from __future__ import annotations
@@ -209,6 +216,81 @@ def lint_project(narr, proj, lead_tol, finish_tol, tail_min, issues):
                                    "压缩 durationMs 或提前 startMs；宁可少画不拖拍"))
 
 
+def _char_w(ch: str, size: float) -> float:
+    """CJK 全角按 1em、其余按 0.52em 估宽（够用来判压字）。"""
+    import unicodedata
+    return size if unicodedata.east_asian_width(ch) in ("W", "F") else size * 0.52
+
+
+def _text_box(e: dict):
+    """文字元素 → (x0, y0, x1, y1, 文本)。project 里 text 的 y 是字顶不是基线。"""
+    if e.get("type") != "text":
+        return None
+    t = e.get("text") or ""
+    if isinstance(t, list):
+        t = "".join(str(x) for x in t)
+    if not t:
+        return None
+    size = e.get("size", 32)
+    w = sum(_char_w(c, size) for c in t)
+    x, y = e.get("x", 0), e.get("y", 0)
+    al = e.get("align", "left")
+    x0 = x - w / 2 if al == "center" else (x - w if al == "right" else x)
+    return (x0, y, x0 + w, y + size, t)
+
+
+def _stroke_box(e: dict):
+    """stroke 的 d 里所有坐标点估包围盒；取不到就返回 None。"""
+    pts = [float(m) for m in re.findall(r"-?\d+(?:\.\d+)?", str(e.get("d", "")))]
+    if len(pts) < 4:
+        return None
+    xs, ys = pts[0::2], pts[1::2]
+    return (min(xs), min(ys), max(xs), max(ys))
+
+
+def lint_layout(proj, tight_px, issues):
+    """Stage C：纯几何版面检查——文字互压 / 文字被描边穿过 / 文字贴线。"""
+    for sc in proj.get("scenes") or []:
+        els = sc.get("elements") or []
+        texts = [(e, _text_box(e)) for e in els]
+        texts = [(e, b) for e, b in texts if b]
+        # C1 文字互压
+        for i in range(len(texts)):
+            for j in range(i + 1, len(texts)):
+                e1, b1 = texts[i]
+                e2, b2 = texts[j]
+                ox = min(b1[2], b2[2]) - max(b1[0], b2[0])
+                oy = min(b1[3], b2[3]) - max(b1[1], b2[1])
+                if ox > 0 and oy > 0:
+                    issues.append((RED, "C1文字互压",
+                                   f"场景 {sc.get('id')} 的 {e1.get('id')}「{b1[4]}」压住 {e2.get('id')}「{b2[4]}」"
+                                   f"（重叠 {ox:.0f}×{oy:.0f}px）",
+                                   "两段文字 y 的差要 ≥ 上段字号 + 10px；标题与副标注至少留 12px，"
+                                   "挤不下就上移标题或给副标注另找位置"))
+        # C2/C3 文字 vs 描边
+        strokes = [(_stroke_box(e), e.get("id")) for e in els if e.get("type") == "stroke"]
+        strokes = [(b, i) for b, i in strokes if b]
+        for e, b in texts:
+            for sb, sid in strokes:
+                # 描边把文字整个包住 = 文字在框里，是设计意图
+                if sb[0] <= b[0] and sb[2] >= b[2] and sb[1] <= b[1] and sb[3] >= b[3]:
+                    continue
+                ox = min(b[2], sb[2]) - max(b[0], sb[0])
+                oy = min(b[3], sb[3]) - max(b[1], sb[1])
+                if ox > 0 and oy > 0:
+                    issues.append((RED, "C2文字穿线",
+                                   f"场景 {sc.get('id')} 的 {e.get('id')}「{b[4]}」被描边 {sid} 穿过"
+                                   f"（交叉 {ox:.0f}×{oy:.0f}px）",
+                                   "把文字整体移出描边的包围盒，或增大描边与文字的间距"))
+                    continue
+                if ox > 0:
+                    gap = b[1] - sb[3] if sb[3] <= b[1] else (sb[1] - b[3] if sb[1] >= b[3] else 0)
+                    if 0 <= gap < tight_px:
+                        issues.append((YELLOW, "C3文字贴线",
+                                       f"场景 {sc.get('id')} 的 {e.get('id')}「{b[4]}」与描边 {sid} 只隔 {gap:.0f}px",
+                                       f"留 {tight_px}px 以上视觉呼吸；括号尖峰尤其容易顶到字底"))
+
+
 def main():
     ap = argparse.ArgumentParser(description="白板片开工前红灯门禁（移植自 storyboard_lint 机制）")
     ap.add_argument("inputs", nargs="+", help="narration.json 和/或 project.json")
@@ -216,6 +298,7 @@ def main():
     ap.add_argument("--finish-tol", type=int, default=220)
     ap.add_argument("--tail-min", type=int, default=300)
     ap.add_argument("--max-pause", type=int, default=None, help="缺省取 narrationPolicy.maxPauseMs，否则 700")
+    ap.add_argument("--tight-px", type=int, default=8, help="文字与描边的最小垂直间隙（C3）")
     args = ap.parse_args()
     if len(args.inputs) not in (1, 2):
         print("给 1–2 个文件：narration.json / project.json")
@@ -234,6 +317,8 @@ def main():
         lint_narration(narr, max_pause, issues)
         if proj:
             lint_project(narr, proj, args.lead_tol, args.finish_tol, args.tail_min, issues)
+    if proj:
+        lint_layout(proj, args.tight_px, issues)
 
     reds = [i for i in issues if i[0] == RED]
     yellows = [i for i in issues if i[0] == YELLOW]
